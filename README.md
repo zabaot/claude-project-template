@@ -2,6 +2,23 @@
 
 <!-- プロジェクトの一言説明 -->
 
+---
+
+> **このテンプレートの使い方**（プロジェクト作成後にこのセクションは削除してください）
+>
+> ```bash
+> gh repo create my-new-project \
+>   --template zabaot/claude-project-template \
+>   --private \
+>   --clone
+>
+> cd my-new-project
+> # CLAUDE.md と .env.example を編集して使い始める
+> claude
+> ```
+
+---
+
 ## セットアップ
 
 ```bash
