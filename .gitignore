@@ -1,0 +1,85 @@
+# ============================================================
+# Claude Code — 運用フォルダ用 .gitignore
+# ============================================================
+
+# ------ Claude Code: ローカル固有・機密ファイル ------
+.claude/settings.local.json       # ローカル上書き設定（個人環境依存）
+.claude/todos/                    # セッション中タスク（揮発性）
+.claude/projects/                 # セッション記録・メモリ（機密情報含む可能性）
+.claude/ide/                      # IDE 連携の一時ファイル
+
+# ワークフロー実行ログ（大容量になりやすい）
+.claude/runs/
+
+# カスタムスキル生成物（ビルド成果物扱い）
+.claude/skills/**/__pycache__/
+.claude/skills/**/*.pyc
+
+# ------ 追跡したいファイル（参考：.gitignore では除外しない）------
+# .claude/settings.json            → チーム共有設定として追跡推奨
+# .claude/commands/                → カスタムスラッシュコマンド
+# .claude/hooks/                   → フック定義
+# CLAUDE.md                        → コードベース指示ファイル
+# MEMORY.md / memory/              → 必要に応じてチーム共有可
+
+# ------ macOS ------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ------ エディタ ------
+.viminfo
+*.swp
+*.swo
+*~
+.idea/
+.vscode/settings.json
+*.code-workspace
+
+# ------ 環境・認証情報 ------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# ------ Python ------
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ------ Node.js ------
+node_modules/
+npm-debug.log*
+yarn-error.log
+.yarn/cache
+.pnp.*
+dist/
+.next/
+.nuxt/
+
+# ------ ログ・一時ファイル ------
+*.log
+logs/
+tmp/
+temp/
+.cache/
+
+# ------ OS 共通 ------
+Thumbs.db
+desktop.ini

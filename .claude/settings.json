@@ -1,0 +1,18 @@
+{
+  "model": "sonnet",
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(find . *)",
+      "Bash(grep *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(echo *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force *)"
+    ]
+  },
+  "hooks": {}
+}
