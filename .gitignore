@@ -1,5 +1,5 @@
 # ============================================================
-# Claude Code — 運用フォルダ用 .gitignore
+# Claude Code — プロジェクトテンプレート用 .gitignore
 # ============================================================
 
 # ------ Claude Code: ローカル固有・機密ファイル ------
@@ -7,20 +7,15 @@
 .claude/todos/                    # セッション中タスク（揮発性）
 .claude/projects/                 # セッション記録・メモリ（機密情報含む可能性）
 .claude/ide/                      # IDE 連携の一時ファイル
-
-# ワークフロー実行ログ（大容量になりやすい）
-.claude/runs/
-
-# カスタムスキル生成物（ビルド成果物扱い）
-.claude/skills/**/__pycache__/
+.claude/runs/                     # ワークフロー実行ログ（大容量になりやすい）
+.claude/skills/**/__pycache__/    # カスタムスキル生成物
 .claude/skills/**/*.pyc
 
-# ------ 追跡したいファイル（参考：.gitignore では除外しない）------
+# ------ 追跡するファイル（参考：.gitignore では除外しない）------
 # .claude/settings.json            → チーム共有設定として追跡推奨
-# .claude/commands/                → カスタムスラッシュコマンド
+# .claude/skills/                  → カスタムスラッシュコマンド
 # .claude/hooks/                   → フック定義
 # CLAUDE.md                        → コードベース指示ファイル
-# MEMORY.md / memory/              → 必要に応じてチーム共有可
 
 # ------ macOS ------
 .DS_Store
@@ -29,15 +24,24 @@
 ._*
 .Spotlight-V100
 .Trashes
+Icon
+
+# ------ Linux ------
+.directory
+.Trash-*
+.nfs*
+*~
 
 # ------ エディタ ------
-.viminfo
 *.swp
 *.swo
-*~
+*.swn
+.viminfo
 .idea/
 .vscode/settings.json
 *.code-workspace
+*.sublime-project
+*.sublime-workspace
 
 # ------ 環境・認証情報 ------
 .env
@@ -56,6 +60,7 @@ __pycache__/
 *.pyo
 .venv/
 venv/
+.python-version
 *.egg-info/
 dist/
 build/
@@ -69,9 +74,18 @@ npm-debug.log*
 yarn-error.log
 .yarn/cache
 .pnp.*
-dist/
 .next/
 .nuxt/
+.svelte-kit/
+
+# ------ Go ------
+*.exe
+*.test
+vendor/
+
+# ------ Rust ------
+target/
+Cargo.lock
 
 # ------ ログ・一時ファイル ------
 *.log
@@ -83,3 +97,4 @@ temp/
 # ------ OS 共通 ------
 Thumbs.db
 desktop.ini
+ehthumbs.db
