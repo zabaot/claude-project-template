@@ -1,9 +1,5 @@
 # skill.md の書き方
 
-このテンプレート ([zabaot/claude-project-template](https://github.com/zabaot/claude-project-template)) の詳細ガイドです。
-
-[← README に戻る](../README.md)
-
 ---
 
 ## スキルとは
@@ -38,7 +34,7 @@ my-project/
             └── skill.md      ← このファイルに指示を書く
 ```
 
-`/<review>` と入力するとこのスキルが呼び出されます。
+`/review` と入力するとこのスキルが呼び出されます。
 
 ---
 
@@ -138,10 +134,10 @@ pytest tests/ -v --tb=short
 
 | 内容 | 置き場所 |
 | ---- | -------- |
-| 常に参照が必要なルール・コマンド | `my-project/CLAUDE.md` |
-| 繰り返す長い手順（デプロイ・レビューなど） | `my-project/.claude/skills/<name>/skill.md` |
+| 常に参照が必要なルール・コマンド | `CLAUDE.md` |
+| 繰り返す長い手順（デプロイ・レビューなど） | `.claude/skills/<name>/skill.md` |
 | 特定の状況にのみ適用するルール | `skill.md`（description で Claude が自動判断） |
-| 自分だけが使う個人メモ・手順 | `my-project/CLAUDE.local.md` |
+| 自分だけが使う個人メモ・手順 | `CLAUDE.local.md` |
 
 > [!TIP]
 > CLAUDE.md が 100 行を超えてきたら、長い手順を skill.md に切り出すサインです。

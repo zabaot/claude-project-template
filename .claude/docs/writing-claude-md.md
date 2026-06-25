@@ -1,9 +1,5 @@
 # CLAUDE.md の書き方
 
-このテンプレート ([zabaot/claude-project-template](https://github.com/zabaot/claude-project-template)) の詳細ガイドです。
-
-[← README に戻る](../README.md)
-
 ---
 
 ## 基本原則
@@ -114,8 +110,8 @@ uvicorn app.main:app --reload
 
 ## CLAUDE.local.md（個人用メモ）
 
-チームの `my-project/CLAUDE.md` に書きたくない個人設定（好みのエイリアス・作業手順・実験的な設定）は
-`my-project/CLAUDE.local.md` に書きます。`.gitignore` で自動的に除外済みです。
+チームの `CLAUDE.md` に書きたくない個人設定（好みのエイリアス・作業手順・実験的な設定）は
+`CLAUDE.local.md` に書きます。`.gitignore` で自動的に除外済みです。
 
 ```markdown
 # CLAUDE.local.md
