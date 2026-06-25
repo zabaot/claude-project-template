@@ -265,6 +265,109 @@ claude
 
 ---
 
+## Claude Desktop・claude.ai との共存
+
+### ツールごとのファイル管理は完全に独立
+
+Claude には複数の入口がありますが、**設定ファイルはツールごとに独立**しています。
+互いに干渉することはありません。
+
+```mermaid
+graph TD
+    subgraph anthropic["Anthropic ツール群"]
+        CD["Claude Desktop\n（デスクトップアプリ）"]
+        CC["Claude Code\n（CLI）"]
+        CW["claude.ai\n（ブラウザ）"]
+    end
+
+    CD -->|"専用"| DF["~/Library/Application Support/Claude/\nclaude_desktop_config.json"]
+    CC -->|"専用"| CF["~/.claude/  ←  ユーザー設定\n.claude/    ←  プロジェクト設定\n.mcp.json   ←  プロジェクト MCP"]
+    CW -->|"専用"| BF["ブラウザの localStorage\n（ローカルファイルなし）"]
+```
+
+### ファイルの棲み分け一覧
+
+| ファイル | 作成するツール | 役割 |
+| -------- | -------------- | ---- |
+| `~/Library/Application Support/Claude/claude_desktop_config.json` | Claude Desktop | Desktop 専用の MCP サーバー設定 |
+| `~/.config/claude/claude_desktop_config.json` | Claude Desktop（Ubuntu） | 同上（Linux パス） |
+| `~/.claude/settings.json` | Claude Code | ユーザーレベルのモデル・権限・テーマ設定 |
+| `~/.claude/CLAUDE.md` | ユーザーが作成 | 全プロジェクト共通の指示（自動作成はされない） |
+| `.claude/settings.json` | ユーザーが作成 | プロジェクトレベルの設定（このテンプレートに含む） |
+| `.mcp.json` | ユーザーが作成 | プロジェクト共有の MCP 設定 |
+
+> [!NOTE]
+> `~/.claude/` ディレクトリは **Claude Code の初回起動時に自動作成**されます。
+> Claude Desktop が作るのではありません。Desktop が使うのは `Application Support/Claude/` のみです。
+
+### MCP の設定は別々に行う
+
+MCP（Model Context Protocol）サーバーを使う場合、
+Claude Desktop と Claude Code それぞれに個別に設定が必要です。
+
+```mermaid
+graph LR
+    MCP["MCP サーバー\n（例: filesystem, GitHub）"]
+
+    subgraph desktop["Claude Desktop"]
+        DC["claude_desktop_config.json\nに記載"]
+    end
+
+    subgraph code["Claude Code"]
+        PC[".mcp.json\nに記載（プロジェクト共有）"]
+        UC["~/.claude/settings.json\nに記載（個人・全プロジェクト）"]
+    end
+
+    MCP <--> DC
+    MCP <--> PC
+    MCP <--> UC
+```
+
+**Claude Desktop への MCP 追加（macOS）:**
+
+```bash
+# 設定ファイルを開く
+open ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/dir"]
+    }
+  }
+}
+```
+
+**Claude Code へのプロジェクト MCP 追加（`.mcp.json`）:**
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_TOKEN": "${GITHUB_TOKEN}" }
+    }
+  }
+}
+```
+
+`.mcp.json` は git 管理してチームで共有できます。機密情報は環境変数経由で渡してください。
+
+### 整理のポイント
+
+| 状況 | 対処 |
+| ---- | ---- |
+| Desktop を入れたら `~/.claude/` ができていた | Claude Code の初回起動で作成されたもの。Desktop は関与しない |
+| Desktop の MCP が Code で使えない | Code 側の `.mcp.json` または `~/.claude/settings.json` に別途追加する |
+| claude.ai の会話設定をローカルに持ちたい | claude.ai はファイルを使わない。`CLAUDE.md` に指示を書く |
+| 設定を変えたのに反映されない | `permissions` / `hooks` / `env` はホットリロード対応。`model` などは再起動が必要 |
+
+---
+
 ## 含まれるファイル
 
 ```text
