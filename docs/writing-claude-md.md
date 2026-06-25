@@ -21,12 +21,12 @@
 ```text
 ~/CLAUDE.md                ← 全セッション共通（個人設定・ホームDir）
         ↓ 上書き
-<project>/CLAUDE.md        ← プロジェクト共通（チーム共有・git 管理）
+my-project/CLAUDE.md        ← プロジェクト共通（チーム共有・git 管理）
         ↓ 上書き
-<project>/CLAUDE.local.md  ← 個人用（.gitignore 除外・チーム共有しない）
+my-project/CLAUDE.local.md  ← 個人用（.gitignore 除外・チーム共有しない）
 ```
 
-> パス表記: `~/` = ホームディレクトリ、`<project>/` = プロジェクトルート直下
+> `my-project/` はプロジェクトルートの例（実際のプロジェクト名に読み替えてください）。`~/` = ホームディレクトリ。
 
 ---
 
@@ -114,8 +114,8 @@ uvicorn app.main:app --reload
 
 ## CLAUDE.local.md（個人用メモ）
 
-チームの `<project>/CLAUDE.md` に書きたくない個人設定（好みのエイリアス・作業手順・実験的な設定）は
-`<project>/CLAUDE.local.md` に書きます。`.gitignore` で自動的に除外済みです。
+チームの `my-project/CLAUDE.md` に書きたくない個人設定（好みのエイリアス・作業手順・実験的な設定）は
+`my-project/CLAUDE.local.md` に書きます。`.gitignore` で自動的に除外済みです。
 
 ```markdown
 # CLAUDE.local.md

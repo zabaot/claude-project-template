@@ -60,6 +60,11 @@ Claude Code の設定はユーザーレベル・プロジェクトレベル・�
 
 後の層が前の層を上書きします。すべての層は同時に読み込まれ、競合箇所のみ上書きされます。
 
+> [!NOTE]
+> **このREADMEのパス表記**
+> `my-project/` はプロジェクトルートの例です。実際のプロジェクト名（例: `todo-app/`）に読み替えてください。
+> `~/` はホームディレクトリです（Ubuntu: `/home/yourname/`、macOS: `/Users/yourname/`）。
+
 ```mermaid
 graph LR
     U["①ユーザー設定\n~/.claude/\n全プロジェクト共通"]
@@ -73,8 +78,8 @@ graph LR
 | 層 | 場所 | git 管理 | 誰が使うか |
 | -- | ---- | -------- | ---------- |
 | ① ユーザー設定 | `~/.claude/` | しない | 自分の全プロジェクトに適用したい設定 |
-| ② プロジェクト設定 | `<project>/.claude/` + `<project>/CLAUDE.md` | する | チームで統一したい設定・指示 |
-| ③ 個人上書き | `<project>/.claude/settings.local.json` + `<project>/CLAUDE.local.md` | しない | チーム設定を個人用に調整するメモ |
+| ② プロジェクト設定 | `my-project/.claude/` + `my-project/CLAUDE.md` | する | チームで統一したい設定・指示 |
+| ③ 個人上書き | `my-project/.claude/settings.local.json` + `my-project/CLAUDE.local.md` | しない | チーム設定を個人用に調整するメモ |
 
 ---
 
@@ -221,15 +226,13 @@ graph TD
 
 **チームでの役割分担:**
 
->`<project>/` = クローンしたリポジトリのルートディレクトリ、`~/` = ホームディレクトリ
-
 | 誰が | 何を | ファイルパス | git 管理 |
 | ---- | ---- | ------------ | -------- |
-| チーム全員で合意 | コーディング規約・禁止操作 | `<project>/CLAUDE.md` | する |
-| チームリーダー | 権限ホワイトリスト・モデル | `<project>/.claude/settings.json` | する |
-| チーム全員 | 共有するスラッシュコマンド | `<project>/.claude/skills/` | する |
-| 各メンバー | 個人的な権限追加・上書き | `<project>/.claude/settings.local.json` | しない |
-| 各メンバー | 個人メモ・作業手順 | `<project>/CLAUDE.local.md` | しない |
+| チーム全員で合意 | コーディング規約・禁止操作 | `my-project/CLAUDE.md` | する |
+| チームリーダー | 権限ホワイトリスト・モデル | `my-project/.claude/settings.json` | する |
+| チーム全員 | 共有するスラッシュコマンド | `my-project/.claude/skills/` | する |
+| 各メンバー | 個人的な権限追加・上書き | `my-project/.claude/settings.local.json` | しない |
+| 各メンバー | 個人メモ・作業手順 | `my-project/CLAUDE.local.md` | しない |
 
 **新メンバーの参加手順:**
 
@@ -256,7 +259,7 @@ claude
 ```
 
 > [!NOTE]
-> `<project>/.claude/settings.local.json` と `<project>/CLAUDE.local.md` は
+> `my-project/.claude/settings.local.json` と `my-project/CLAUDE.local.md` は
 > 自動的に `.gitignore` 対象です。誤ってコミットする心配はありません。
 
 このパターンが必要なケース:
@@ -290,16 +293,14 @@ graph TD
 
 ### ファイルの棲み分け一覧
 
-> パス表記: `~/` = ホームディレクトリ、`<project>/` = プロジェクトルート直下
-
 | ファイルパス | 作成するツール | 役割 |
 | ------------ | -------------- | ---- |
 | `~/Library/Application Support/Claude/claude_desktop_config.json` | Claude Desktop（macOS） | Desktop 専用の MCP サーバー設定 |
 | `~/.config/claude/claude_desktop_config.json` | Claude Desktop（Ubuntu） | 同上（Linux パス） |
 | `~/.claude/settings.json` | Claude Code（初回起動時） | **ユーザーレベル**設定。全プロジェクト共通のモデル・テーマ・言語 |
 | `~/CLAUDE.md` | ユーザーが作成 | **ユーザーレベル**指示。全プロジェクト共通のルール |
-| `<project>/.claude/settings.json` | ユーザーが作成 | **プロジェクトレベル**設定。チーム共有・git 管理（このテンプレートに含む） |
-| `<project>/.mcp.json` | ユーザーが作成 | **プロジェクトレベル** MCP 設定。チーム共有・git 管理 |
+| `my-project/.claude/settings.json` | ユーザーが作成 | **プロジェクトレベル**設定。チーム共有・git 管理（このテンプレートに含む） |
+| `my-project/.mcp.json` | ユーザーが作成 | **プロジェクトレベル** MCP 設定。チーム共有・git 管理 |
 
 > [!NOTE]
 > `~/.claude/` ディレクトリは **Claude Code の初回起動時に自動作成**されます。
@@ -376,7 +377,7 @@ open ~/Library/Application\ Support/Claude/claude_desktop_config.json
 | 状況 | 対処 |
 | ---- | ---- |
 | Desktop を入れたら `~/.claude/` ができていた | Claude Code の初回起動で作成されたもの。Desktop は関与しない |
-| Desktop の MCP が Code で使えない | Code 側の `<project>/.mcp.json`（チーム共有）または `~/.claude/settings.json`（個人）に別途追加する |
+| Desktop の MCP が Code で使えない | Code 側の `my-project/.mcp.json`（チーム共有）または `~/.claude/settings.json`（個人）に別途追加する |
 | claude.ai の会話設定をローカルに持ちたい | claude.ai はファイルを使わない。`CLAUDE.md` に指示を書く |
 | 設定を変えたのに反映されない | `permissions` / `hooks` / `env` はホットリロード対応。`model` などは再起動が必要 |
 
@@ -639,16 +640,16 @@ git diff HEAD~1 | claude -p "この差分のリスクを評価して"
 
 - **200行以内**を目安に短くまとめる。長すぎると Claude がルールを無視する
 - `@import` で外部ファイルを分割して読み込める
-- `<project>/CLAUDE.local.md` は個人メモ用（`.gitignore` 除外済み）
+- `my-project/CLAUDE.local.md` は個人メモ用（`.gitignore` 除外済み）
 
 ### 読み込み優先順位（後ろが上書き）
 
 ```text
 ~/CLAUDE.md                ← 全セッション共通（個人設定・ホームDir）
         ↓
-<project>/CLAUDE.md        ← プロジェクト共通（チーム共有・git 管理）
+my-project/CLAUDE.md        ← プロジェクト共通（チーム共有・git 管理）
         ↓
-<project>/CLAUDE.local.md  ← 個人用（.gitignore 除外・チーム共有しない）
+my-project/CLAUDE.local.md  ← 個人用（.gitignore 除外・チーム共有しない）
 ```
 
 ### 書くべき内容・避けるべき内容
@@ -675,9 +676,9 @@ git diff HEAD~1 | claude -p "この差分のリスクを評価して"
 
 | 内容 | 置き場所 |
 | ---- | -------- |
-| 常に参照が必要なルール・コマンド | `<project>/CLAUDE.md` |
-| 繰り返す長い手順（デプロイ・レビューなど） | `<project>/.claude/skills/<name>/skill.md` |
-| 自分だけが使う個人メモ・手順 | `<project>/CLAUDE.local.md` |
+| 常に参照が必要なルール・コマンド | `my-project/CLAUDE.md` |
+| 繰り返す長い手順（デプロイ・レビューなど） | `my-project/.claude/skills/<name>/skill.md` |
+| 自分だけが使う個人メモ・手順 | `my-project/CLAUDE.local.md` |
 
 > [!TIP]
 > CLAUDE.md が 100 行を超えてきたら、長い手順を skill.md に切り出すサインです。
