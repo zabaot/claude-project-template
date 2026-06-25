@@ -63,8 +63,8 @@ Claude Code の設定はユーザーレベル・プロジェクトレベル・�
 ```mermaid
 graph LR
     U["①ユーザー設定\n~/.claude/\n全プロジェクト共通"]
-    P["②プロジェクト設定\n.claude/ + CLAUDE.md\nチーム共有・git管理"]
-    L["③個人上書き\nsettings.local.json\nCLAUDE.local.md\n非共有・gitignore"]
+    P["②プロジェクト設定\n<project>/.claude/ + <project>/CLAUDE.md\nチーム共有・git管理"]
+    L["③個人上書き\n<project>/.claude/settings.local.json\n<project>/CLAUDE.local.md\n非共有・gitignore"]
     CC["Claude Code"]
 
     U -->|上書き| P -->|上書き| L --> CC
@@ -73,8 +73,8 @@ graph LR
 | 層 | 場所 | git 管理 | 誰が使うか |
 | -- | ---- | -------- | ---------- |
 | ① ユーザー設定 | `~/.claude/` | しない | 自分の全プロジェクトに適用したい設定 |
-| ② プロジェクト設定 | `.claude/` + `CLAUDE.md` | する | チームで統一したい設定・指示 |
-| ③ 個人上書き | `settings.local.json` + `CLAUDE.local.md` | しない | チーム設定を個人用に調整するメモ |
+| ② プロジェクト設定 | `<project>/.claude/` + `<project>/CLAUDE.md` | する | チームで統一したい設定・指示 |
+| ③ 個人上書き | `<project>/.claude/settings.local.json` + `<project>/CLAUDE.local.md` | しない | チーム設定を個人用に調整するメモ |
 
 ---
 
@@ -202,15 +202,15 @@ graph TD
     T["zabaot/claude-project-template"] -->|"gh repo create --template"| R["チームリポジトリ"]
 
     subgraph team["チームリポジトリ（git 管理）"]
-        CM["CLAUDE.md\nチーム共通指示・コーディング規約"]
-        ST[".claude/settings.json\n権限・モデル"]
-        SK[".claude/skills/\nチーム共有スキル"]
+        CM["<project>/CLAUDE.md\nチーム共通指示・コーディング規約"]
+        ST["<project>/.claude/settings.json\n権限・モデル"]
+        SK["<project>/.claude/skills/\nチーム共有スキル"]
     end
 
     subgraph personal["各メンバーのローカル（git 管理外）"]
-        SL[".claude/settings.local.json\n個人権限の上書き"]
-        CL["CLAUDE.local.md\n個人メモ・好み"]
-        US["~/.claude/\n全プロジェクト共通の個人設定"]
+        SL["<project>/.claude/settings.local.json\n個人権限の上書き"]
+        CL["<project>/CLAUDE.local.md\n個人メモ・好み"]
+        US["~/.claude/\n全プロジェクト共通の個人設定（ホームDir）"]
     end
 
     R --> CM & ST & SK
@@ -221,13 +221,15 @@ graph TD
 
 **チームでの役割分担:**
 
-| 誰が | 何を | 場所 |
-| ---- | ---- | ---- |
-| チーム全員で合意 | コーディング規約・禁止操作 | `CLAUDE.md` |
-| チームリーダー | 権限ホワイトリスト・モデル | `.claude/settings.json` |
-| チーム全員 | 共有するスラッシュコマンド | `.claude/skills/` |
-| 各メンバー | 個人的な権限追加・上書き | `.claude/settings.local.json` |
-| 各メンバー | 個人メモ・作業手順 | `CLAUDE.local.md` |
+>`<project>/` = クローンしたリポジトリのルートディレクトリ、`~/` = ホームディレクトリ
+
+| 誰が | 何を | ファイルパス | git 管理 |
+| ---- | ---- | ------------ | -------- |
+| チーム全員で合意 | コーディング規約・禁止操作 | `<project>/CLAUDE.md` | する |
+| チームリーダー | 権限ホワイトリスト・モデル | `<project>/.claude/settings.json` | する |
+| チーム全員 | 共有するスラッシュコマンド | `<project>/.claude/skills/` | する |
+| 各メンバー | 個人的な権限追加・上書き | `<project>/.claude/settings.local.json` | しない |
+| 各メンバー | 個人メモ・作業手順 | `<project>/CLAUDE.local.md` | しない |
 
 **新メンバーの参加手順:**
 
@@ -254,8 +256,8 @@ claude
 ```
 
 > [!NOTE]
-> `settings.local.json` と `CLAUDE.local.md` は自動的に `.gitignore` 対象です。
-> 誤ってコミットする心配はありません。
+> `<project>/.claude/settings.local.json` と `<project>/CLAUDE.local.md` は
+> 自動的に `.gitignore` 対象です。誤ってコミットする心配はありません。
 
 このパターンが必要なケース:
 
