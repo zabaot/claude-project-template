@@ -50,6 +50,221 @@ graph TD
 
 ---
 
+## 推奨運用パターン
+
+Claude Code の設定はユーザーレベル・プロジェクトレベル・個人上書きの 3 層構造になっています。
+このテンプレートはプロジェクトレベルを担います。
+用途に合わせて以下のパターンを選んでください。
+
+### 設定の優先順位（全体像）
+
+後の層が前の層を上書きします。すべての層は同時に読み込まれ、競合箇所のみ上書きされます。
+
+```mermaid
+graph LR
+    U["①ユーザー設定\n~/.claude/\n全プロジェクト共通"]
+    P["②プロジェクト設定\n.claude/ + CLAUDE.md\nチーム共有・git管理"]
+    L["③個人上書き\nsettings.local.json\nCLAUDE.local.md\n非共有・gitignore"]
+    CC["Claude Code"]
+
+    U -->|上書き| P -->|上書き| L --> CC
+```
+
+| 層 | 場所 | git 管理 | 誰が使うか |
+| -- | ---- | -------- | ---------- |
+| ① ユーザー設定 | `~/.claude/` | しない | 自分の全プロジェクトに適用したい設定 |
+| ② プロジェクト設定 | `.claude/` + `CLAUDE.md` | する | チームで統一したい設定・指示 |
+| ③ 個人上書き | `settings.local.json` + `CLAUDE.local.md` | しない | チーム設定を個人用に調整するメモ |
+
+---
+
+### パターン 1 — 個人開発・単一マシン（最小構成）
+
+このテンプレートをクローンするだけで始められます。
+
+```mermaid
+graph LR
+    T["このテンプレート\n（clone）"] --> P["my-project/.claude/\nCLAUDE.md"]
+    P --> CC["Claude Code"]
+```
+
+**手順:**
+
+```bash
+# 1. テンプレートから新規リポジトリを作成
+gh repo create my-project \
+  --template zabaot/claude-project-template \
+  --private --clone
+
+cd my-project
+
+# 2. CLAUDE.md をプロジェクトに合わせて編集
+vim CLAUDE.md
+
+# 3. 起動
+claude
+```
+
+このパターンで十分なケース:
+
+- 個人プロジェクト・検証・学習用途
+- 単一マシンで完結する開発
+
+---
+
+### パターン 2 — 個人開発・複数マシン（設定を同期したい）
+
+`~/.claude/` の個人設定をプライベートリポジトリで管理し、symlink で接続します。
+新しいマシンでもクローン一発で同じ環境が再現できます。
+
+```mermaid
+graph TD
+    subgraph private["private dotfiles リポジトリ"]
+        CS["claude/settings.json\nモデル・テーマ・言語"]
+        SK["claude/skills/\n個人スキル集"]
+        HCM["home/CLAUDE.md\n全プロジェクト共通指示"]
+    end
+
+    CS -->|symlink| S["~/.claude/settings.json"]
+    SK -->|symlink| K["~/.claude/skills/"]
+    HCM -->|symlink| M["~/CLAUDE.md"]
+
+    S --> CC["Claude Code"]
+    K --> CC
+    M --> CC
+```
+
+**セットアップ手順（初回）:**
+
+```bash
+# 1. 個人設定用のプライベートリポジトリを作成
+mkdir ~/my-claude-settings
+cd ~/my-claude-settings
+git init && git branch -M main
+
+# 2. ユーザーレベルの設定ファイルを作成
+mkdir -p claude/skills
+
+cat > claude/settings.json << 'EOF'
+{
+  "model": "sonnet",
+  "theme": "dark",
+  "language": "ja"
+}
+EOF
+
+# 3. 全プロジェクト共通の指示ファイルを作成
+mkdir home
+cat > home/CLAUDE.md << 'EOF'
+# CLAUDE.md
+
+## 環境
+- macOS / Ubuntu
+- Shell: zsh
+
+## 個人ルール
+- コメントは日本語で書く
+- テストは必ず書く
+EOF
+
+# 4. symlink で ~/.claude/ に接続
+mkdir -p ~/.claude
+ln -sf ~/my-claude-settings/claude/settings.json ~/.claude/settings.json
+ln -sf ~/my-claude-settings/home/CLAUDE.md ~/CLAUDE.md
+
+# 5. GitHub にプッシュ
+gh repo create my-claude-settings --private --source . --push
+```
+
+**別マシンでの再現:**
+
+```bash
+git clone git@github.com:<your-username>/my-claude-settings.git ~/my-claude-settings
+ln -sf ~/my-claude-settings/claude/settings.json ~/.claude/settings.json
+ln -sf ~/my-claude-settings/home/CLAUDE.md ~/CLAUDE.md
+```
+
+このパターンで十分なケース:
+
+- 複数のマシンで同じ Claude Code 環境を使いたい
+- 個人スキル（`/review` など）を全プロジェクトで共有したい
+- `~/CLAUDE.md` に共通ルール（言語・スタイル）を一度だけ書きたい
+
+---
+
+### パターン 3 — チーム開発
+
+このテンプレートをベースにプロジェクトを作成し、
+チームメンバーそれぞれが個人設定をパターン 2 で管理します。
+
+```mermaid
+graph TD
+    T["zabaot/claude-project-template"] -->|"gh repo create --template"| R["チームリポジトリ"]
+
+    subgraph team["チームリポジトリ（git 管理）"]
+        CM["CLAUDE.md\nチーム共通指示・コーディング規約"]
+        ST[".claude/settings.json\n権限・モデル"]
+        SK[".claude/skills/\nチーム共有スキル"]
+    end
+
+    subgraph personal["各メンバーのローカル（git 管理外）"]
+        SL[".claude/settings.local.json\n個人権限の上書き"]
+        CL["CLAUDE.local.md\n個人メモ・好み"]
+        US["~/.claude/\n全プロジェクト共通の個人設定"]
+    end
+
+    R --> CM & ST & SK
+    CM --> CL
+    ST --> SL
+    US --> R
+```
+
+**チームでの役割分担:**
+
+| 誰が | 何を | 場所 |
+| ---- | ---- | ---- |
+| チーム全員で合意 | コーディング規約・禁止操作 | `CLAUDE.md` |
+| チームリーダー | 権限ホワイトリスト・モデル | `.claude/settings.json` |
+| チーム全員 | 共有するスラッシュコマンド | `.claude/skills/` |
+| 各メンバー | 個人的な権限追加・上書き | `.claude/settings.local.json` |
+| 各メンバー | 個人メモ・作業手順 | `CLAUDE.local.md` |
+
+**新メンバーの参加手順:**
+
+```bash
+# 1. リポジトリをクローン
+git clone git@github.com:<org>/<project>.git
+cd <project>
+
+# 2. 必要なら個人設定を上書き（任意）
+cat > .claude/settings.local.json << 'EOF'
+{
+  "model": "opus"
+}
+EOF
+
+# 3. 個人メモを追加（任意）
+cat > CLAUDE.local.md << 'EOF'
+## 個人メモ
+- 自分の担当は認証モジュール（src/auth/）
+EOF
+
+# 4. 起動
+claude
+```
+
+> [!NOTE]
+> `settings.local.json` と `CLAUDE.local.md` は自動的に `.gitignore` 対象です。
+> 誤ってコミットする心配はありません。
+
+このパターンが必要なケース:
+
+- 複数人でリポジトリを共有する
+- チームで Claude Code の使い方を統一したい
+- 新メンバーがすぐに同じ環境で開発を始められるようにしたい
+
+---
+
 ## 含まれるファイル
 
 ```text
