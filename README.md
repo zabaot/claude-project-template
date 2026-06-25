@@ -34,7 +34,7 @@ Claude Code はプロジェクトルートの `CLAUDE.md` と `.claude/` ディ�
 
 ```mermaid
 graph TD
-    subgraph template["プロジェクトリポジトリ（このテンプレートから作成）"]
+    subgraph template["プロジェクトリポジトリ（このテンプレートから作成）\n<project>/"]
         CM["CLAUDE.md\nプロジェクト指示・コマンド・制約"]
         ST[".claude/settings.json\n権限・モデル設定"]
         SK[".claude/skills/review/skill.md\n/review コマンド定義"]
@@ -119,7 +119,7 @@ claude
 
 ```mermaid
 graph TD
-    subgraph private["private dotfiles リポジトリ"]
+    subgraph private["private dotfiles リポジトリ\n(例: ~/my-claude-settings/)"]
         CS["claude/settings.json\nモデル・テーマ・言語"]
         SK["claude/skills/\n個人スキル集"]
         HCM["home/CLAUDE.md\n全プロジェクト共通指示"]
