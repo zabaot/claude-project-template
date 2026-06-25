@@ -282,7 +282,8 @@ graph TD
         CW["claude.ai\n（ブラウザ）"]
     end
 
-    CD -->|"専用"| DF["~/Library/Application Support/Claude/\nclaude_desktop_config.json"]
+    CD -->|"専用(Ubuntu)"| DU["~/.config/claude/\nclaude_desktop_config.json"]
+    CD -->|"専用(macOS)"| DF["~/Library/Application Support/Claude/\nclaude_desktop_config.json"]
     CC -->|"専用"| CF["~/.claude/settings.json  ← ユーザー設定（ホーム）\n~/CLAUDE.md              ← ユーザー共通指示\n<project>/.claude/       ← プロジェクト設定\n<project>/.mcp.json      ← プロジェクト MCP"]
     CW -->|"専用"| BF["ブラウザの localStorage\n（ローカルファイルなし）"]
 ```
@@ -325,6 +326,15 @@ graph LR
     MCP <--> DC
     MCP <--> PC
     MCP <--> UC
+```
+
+**Claude Desktop への MCP 追加（Ubuntu）:**
+
+```bash
+# 設定ファイルを作成・編集
+mkdir -p ~/.config/claude
+nano ~/.config/claude/claude_desktop_config.json
+# または: xdg-open ~/.config/claude/claude_desktop_config.json
 ```
 
 **Claude Desktop への MCP 追加（macOS）:**
@@ -623,188 +633,51 @@ git diff HEAD~1 | claude -p "この差分のリスクを評価して"
 
 ## CLAUDE.md の書き方
 
-### 基本原則
+詳細ガイド → **[docs/writing-claude-md.md](docs/writing-claude-md.md)**
 
-- **200行以内**を目安に短くまとめる。長すぎると Claude がルールを無視するようになる
-- 各行に「これを削除したら Claude は誤判断するか？」と問い、NO なら削除する
-- ビルド・テストコマンドなど Claude が実際に実行する情報を優先する
+### 要点
 
-### 読み込み優先順位
+- **200行以内**を目安に短くまとめる。長すぎると Claude がルールを無視する
+- `@import` で外部ファイルを分割して読み込める
+- `<project>/CLAUDE.local.md` は個人メモ用（`.gitignore` 除外済み）
 
-複数の CLAUDE.md が存在する場合、後者が前者を上書きします。
+### 読み込み優先順位（後ろが上書き）
 
 ```text
-~/.claude/CLAUDE.md        ← 全セッション共通（個人設定）
-        ↓ 上書き
-./CLAUDE.md                ← プロジェクト共通（チーム共有・git 管理）
-        ↓ 上書き
-./CLAUDE.local.md          ← 個人用（.gitignore 除外・チーム共有しない）
+~/CLAUDE.md                ← 全セッション共通（個人設定・ホームDir）
+        ↓
+<project>/CLAUDE.md        ← プロジェクト共通（チーム共有・git 管理）
+        ↓
+<project>/CLAUDE.local.md  ← 個人用（.gitignore 除外・チーム共有しない）
 ```
-
-### 推奨セクション構成
-
-```markdown
-# CLAUDE.md
-
-## プロジェクト概要
-（1〜3行。Claude がコードの意図を理解するための最低限の背景）
-
-## 技術スタック
-（言語・フレームワーク・主要ライブラリとバージョン）
-
-## コマンド
-（ビルド・テスト・Lint を具体的に。Claude が実際に実行する）
-
-## ディレクトリ構成
-（重要な 3〜5 ディレクトリのみ。自明なものは省く）
-
-## 重要な制約・注意事項
-（やってはいけない操作・隠れた前提条件）
-
-## 外部サービス・認証情報
-（利用サービス一覧と .env の変数名。値は書かない）
-```
-
-### @import で外部ファイルを読み込む
-
-CLAUDE.md が長くなりすぎる場合、内容をファイルに分割して読み込めます。
-
-```markdown
-# CLAUDE.md
-
-@docs/architecture.md
-@docs/api-conventions.md
-@~/.claude/personal-preferences.md
-```
-
-パスはリポジトリルートからの相対パスまたは絶対パスが使えます。
 
 ### 書くべき内容・避けるべき内容
 
 | 書くべき内容 | 避けるべき内容 |
 | ------------ | -------------- |
 | ビルド・テスト・Lint コマンド | API ドキュメント（リンクを貼るだけでよい） |
-| コードスタイル・命名規則 | コード例（ファイルへの参照でよい） |
-| やってはいけない操作と理由 | 頻繁に変わる情報 |
-| アーキテクチャ上の決定とその背景 | 自明な慣習（「変数名は意味のある名前に」など） |
+| やってはいけない操作と理由 | コード例（ファイルへの参照でよい） |
 | 環境変数の一覧と取得方法 | 長い説明文・手順書（skill.md に移す） |
-
-### CLAUDE.local.md（個人用メモ）
-
-チームの `CLAUDE.md` に書きたくない個人設定（好みのエイリアス・作業手順・実験的な設定）は
-`CLAUDE.local.md` に書いて `.gitignore` に追加します。
-
-```markdown
-# CLAUDE.local.md
-（.gitignore 除外済み・自分だけが読む）
-
-## 個人メモ
-- レビュー時は必ず日本語でコメントすること
-- テストは pytest -x で止める（全件走らせない）
-```
 
 ---
 
 ## skill.md の書き方
 
-スキルは CLAUDE.md に書くには長すぎる**繰り返しの手順**や**チェックリスト**を
-切り出すのに適しています。呼び出したときだけ読み込まれるためコンテキストの節約にもなります。
+詳細ガイド → **[docs/writing-skill-md.md](docs/writing-skill-md.md)**
 
-### 基本構造
+### skill.md の要点
 
-```markdown
----
-description: このスキルの用途説明（Claude が自動選択する際に参照される）
----
-
-# スキル名
-
-ここに Claude への指示を自然言語で記述します。
-```
-
-### フロントマターの設定項目
-
-| キー | 説明 | 例 |
-| ---- | ---- | -- |
-| `description` | スキルの用途。Claude が関連タスク時に自動選択する判断基準になる | `"PR の変更内容をレビューする"` |
-| `disable-model-invocation: true` | 手動呼び出し専用にする（Claude が自動選択しなくなる） | `true` |
-| `tools` | このスキル内で使えるツールを制限する | `["Bash", "Read"]` |
-| `context: fork` | サブエージェントとして隔離実行する | `fork` |
-
-### $ARGUMENTS — 引数を受け取る
-
-`/skill-name 引数` の形で渡した文字列を `$ARGUMENTS` で参照できます。
-
-```markdown
----
-description: 指定したファイルをレビューする
----
-
-# /file-review
-
-$ARGUMENTS のコードを以下の観点でレビューしてください。
-
-1. バグ・ロジックの誤り
-2. セキュリティ上の問題
-3. パフォーマンス上の問題
-```
-
-呼び出し例:
-
-```text
-/file-review src/auth.py
-```
-
-`$ARGUMENTS` が `src/auth.py` に展開されて実行されます。
-
-### !`cmd` — コマンド出力をスキルに埋め込む
-
-バッククォートで囲んだシェルコマンドの実行結果をスキルの本文に展開できます。
-
-```markdown
----
-description: 現在の変更状況を確認してレビューする
----
-
-# /check
-
-以下の情報をもとに変更内容を評価してください。
-
-## 現在の差分
-!`git diff HEAD`
-
-## 最近のコミット
-!`git log --oneline -10`
-```
-
-### context: fork — サブエージェントとして隔離実行する
-
-`context: fork` を指定するとスキルがサブエージェントとして起動し、
-メインの会話コンテキストを汚さずに重いタスクを実行できます。
-
-```markdown
----
-description: テストを隔離実行して結果を報告する
-context: fork
----
-
-# /test-isolated
-
-以下のコマンドでテストを実行し、失敗した項目のみを一覧で報告してください。
-
-\`\`\`bash
-pytest tests/ -v --tb=short
-\`\`\`
-```
+- `.claude/skills/<name>/skill.md` を作成するだけで `/<name>` コマンドになる
+- `$ARGUMENTS` で引数を受け取り、`` !`cmd` `` でコマンド出力を展開できる
+- `context: fork` でサブエージェントとして隔離実行できる
 
 ### CLAUDE.md と skill.md の使い分け
 
 | 内容 | 置き場所 |
 | ---- | -------- |
-| 常に参照が必要なルール・コマンド | `CLAUDE.md` |
-| 繰り返す長い手順（デプロイ・レビューなど） | `skill.md` |
-| 特定のファイルや状況にのみ適用するルール | `skill.md`（description で判断） |
-| 自分だけが使う個人メモ・手順 | `CLAUDE.local.md` |
+| 常に参照が必要なルール・コマンド | `<project>/CLAUDE.md` |
+| 繰り返す長い手順（デプロイ・レビューなど） | `<project>/.claude/skills/<name>/skill.md` |
+| 自分だけが使う個人メモ・手順 | `<project>/CLAUDE.local.md` |
 
 > [!TIP]
 > CLAUDE.md が 100 行を超えてきたら、長い手順を skill.md に切り出すサインです。
