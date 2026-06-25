@@ -36,9 +36,9 @@ Claude Code はプロジェクトルートの `CLAUDE.md` と `.claude/` ディ�
 graph TD
     subgraph template["プロジェクトリポジトリ（このテンプレートから作成）"]
         CM["CLAUDE.md\nプロジェクト指示・コマンド・制約"]
-        ST["`.claude/settings.json`\n権限・モデル設定"]
-        SK["`.claude/skills/review/skill.md`\n/review コマンド定義"]
-        EX["`.env.example`\n環境変数テンプレート"]
+        ST[".claude/settings.json\n権限・モデル設定"]
+        SK[".claude/skills/review/skill.md\n/review コマンド定義"]
+        EX[".env.example\n環境変数テンプレート"]
     end
 
     CM -->|"起動時に自動読み込み"| CC["Claude Code"]
