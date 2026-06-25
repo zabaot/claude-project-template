@@ -1,5 +1,9 @@
 # CLAUDE.md の書き方
 
+このテンプレート ([zabaot/claude-project-template](https://github.com/zabaot/claude-project-template)) の詳細ガイドです。
+
+[← README に戻る](../README.md)
+
 ---
 
 ## 基本原則
