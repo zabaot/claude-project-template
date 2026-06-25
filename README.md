@@ -97,6 +97,8 @@ graph LR
 
 ```bash
 # 1. テンプレートから新規リポジトリを作成
+#    my-project → 任意のプロジェクト名に変更
+#    zabaot/claude-project-template → このテンプレートリポジトリ（変更不要）
 gh repo create my-project \
   --template zabaot/claude-project-template \
   --private --clone
@@ -481,6 +483,8 @@ claude login
 #### gh CLI を使う場合（推奨）
 
 ```bash
+# my-new-project → 任意のプロジェクト名に変更
+# zabaot/claude-project-template → このテンプレートリポジトリ（変更不要）
 gh repo create my-new-project \
   --template zabaot/claude-project-template \
   --private \
