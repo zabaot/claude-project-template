@@ -84,7 +84,7 @@ graph LR
 
 ```mermaid
 graph LR
-    T["このテンプレート\n（clone）"] --> P["my-project/.claude/\nCLAUDE.md"]
+    T["このテンプレート\n（clone）"] --> P["<project>/.claude/\nCLAUDE.md"]
     P --> CC["Claude Code"]
 ```
 
@@ -235,8 +235,8 @@ graph TD
 
 ```bash
 # 1. リポジトリをクローン
-git clone git@github.com:<org>/<project>.git
-cd <project>
+git clone git@github.com:<org>/my-project.git
+cd my-project
 
 # 2. 必要なら個人設定を上書き（任意）
 cat > .claude/settings.local.json << 'EOF'
