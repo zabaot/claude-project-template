@@ -34,11 +34,11 @@ Claude Code はプロジェクトルートの `CLAUDE.md` と `.claude/` ディ�
 
 ```mermaid
 graph TD
-    subgraph template["プロジェクトリポジトリ（このテンプレートから作成）\nmy-project/"]
-        CM["CLAUDE.md\nプロジェクト指示・コマンド・制約"]
-        ST[".claude/settings.json\n権限・モデル設定"]
-        SK[".claude/skills/review/skill.md\n/review コマンド定義"]
-        EX[".env.example\n環境変数テンプレート"]
+    subgraph template["プロジェクトリポジトリ（このテンプレートから作成）"]
+        CM["my-project/CLAUDE.md\nプロジェクト指示・コマンド・制約"]
+        ST["my-project/.claude/settings.json\n権限・モデル設定"]
+        SK["my-project/.claude/skills/review/skill.md\n/review コマンド定義"]
+        EX["my-project/.env.example\n環境変数テンプレート"]
     end
 
     CM -->|"起動時に自動読み込み"| CC["Claude Code"]
@@ -119,10 +119,10 @@ claude
 
 ```mermaid
 graph TD
-    subgraph private["private dotfiles リポジトリ\n(例: ~/my-claude-settings/)"]
-        CS["claude/settings.json\nモデル・テーマ・言語"]
-        SK["claude/skills/\n個人スキル集"]
-        HCM["home/CLAUDE.md\n全プロジェクト共通指示"]
+    subgraph private["private dotfiles リポジトリ（例: ~/my-claude-settings/）"]
+        CS["~/my-claude-settings/claude/settings.json\nモデル・テーマ・言語"]
+        SK["~/my-claude-settings/claude/skills/\n個人スキル集"]
+        HCM["~/my-claude-settings/home/CLAUDE.md\n全プロジェクト共通指示"]
     end
 
     CS -->|symlink| S["~/.claude/settings.json"]
