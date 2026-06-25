@@ -164,7 +164,7 @@ cat > home/CLAUDE.md << 'EOF'
 # CLAUDE.md
 
 ## 環境
-- macOS / Ubuntu
+- Ubuntu / macOS
 - Shell: zsh
 
 ## 個人ルール
@@ -295,8 +295,8 @@ graph TD
 
 | ファイルパス | 作成するツール | 役割 |
 | ------------ | -------------- | ---- |
-| `~/Library/Application Support/Claude/claude_desktop_config.json` | Claude Desktop（macOS） | Desktop 専用の MCP サーバー設定 |
-| `~/.config/claude/claude_desktop_config.json` | Claude Desktop（Ubuntu） | 同上（Linux パス） |
+| `~/.config/claude/claude_desktop_config.json` | Claude Desktop（Ubuntu） | Desktop 専用の MCP サーバー設定 |
+| `~/Library/Application Support/Claude/claude_desktop_config.json` | Claude Desktop（macOS） | 同上（macOS パス） |
 | `~/.claude/settings.json` | Claude Code（初回起動時） | **ユーザーレベル**設定。全プロジェクト共通のモデル・テーマ・言語 |
 | `~/CLAUDE.md` | ユーザーが作成 | **ユーザーレベル**指示。全プロジェクト共通のルール |
 | `my-project/.claude/settings.json` | ユーザーが作成 | **プロジェクトレベル**設定。チーム共有・git 管理（このテンプレートに含む） |
@@ -304,7 +304,7 @@ graph TD
 
 > [!NOTE]
 > `~/.claude/` ディレクトリは **Claude Code の初回起動時に自動作成**されます。
-> Claude Desktop が作るのではありません。Desktop が使うのは `Application Support/Claude/` のみです。
+> Claude Desktop が作るのではありません。Desktop が使うのは Ubuntu では `~/.config/claude/`、macOS では `~/Library/Application Support/Claude/` のみです。
 
 ### MCP の設定は別々に行う
 
@@ -448,7 +448,7 @@ Claude Code の**権限設定**と**モデル設定**を記述します。
 以下のカテゴリを除外設定済みです：
 
 - Claude Code のセッション固有ファイル（`.claude/projects/`, `.claude/runs/` など）
-- macOS / Linux の OS ファイル
+- Linux / macOS の OS ファイル
 - 主要エディタのファイル（vim, JetBrains, VSCode）
 - 認証情報・秘密鍵（`.env`, `*.pem`, `*.key` など）
 - Python / Node.js / Go / Rust のビルド成果物
@@ -462,8 +462,8 @@ Claude Code の**権限設定**と**モデル設定**を記述します。
 | ツール | バージョン | インストール |
 | ------ | ---------- | ------------ |
 | Node.js | v18 以上 | [nodejs.org](https://nodejs.org) |
-| git | 最新版 | `brew install git` / `apt install git` |
-| gh CLI | 最新版 | `brew install gh` / [GitHub CLI](https://cli.github.com) |
+| git | 最新版 | `apt install git` / `brew install git` |
+| gh CLI | 最新版 | [GitHub CLI](https://cli.github.com) / `brew install gh` |
 | Claude Code | 最新版 | `npm install -g @anthropic-ai/claude-code` |
 
 Claude Code の初回起動時に Anthropic アカウントへのログインが必要です。
