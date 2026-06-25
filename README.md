@@ -167,7 +167,7 @@ cat > home/CLAUDE.md << 'EOF'
 
 ## 環境
 - Ubuntu / macOS
-- Shell: zsh
+- Shell: bash（Ubuntu）/ zsh（macOS）
 
 ## 個人ルール
 - コメントは日本語で書く
