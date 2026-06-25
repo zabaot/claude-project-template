@@ -34,7 +34,7 @@ Claude Code はプロジェクトルートの `CLAUDE.md` と `.claude/` ディ�
 
 ```mermaid
 graph TD
-    subgraph template["プロジェクトリポジトリ（このテンプレートから作成）\n<project>/"]
+    subgraph template["プロジェクトリポジトリ（このテンプレートから作成）\nmy-project/"]
         CM["CLAUDE.md\nプロジェクト指示・コマンド・制約"]
         ST[".claude/settings.json\n権限・モデル設定"]
         SK[".claude/skills/review/skill.md\n/review コマンド定義"]
@@ -63,8 +63,8 @@ Claude Code の設定はユーザーレベル・プロジェクトレベル・�
 ```mermaid
 graph LR
     U["①ユーザー設定\n~/.claude/\n全プロジェクト共通"]
-    P["②プロジェクト設定\n<project>/.claude/ + <project>/CLAUDE.md\nチーム共有・git管理"]
-    L["③個人上書き\n<project>/.claude/settings.local.json\n<project>/CLAUDE.local.md\n非共有・gitignore"]
+    P["②プロジェクト設定\nmy-project/.claude/ + my-project/CLAUDE.md\nチーム共有・git管理"]
+    L["③個人上書き\nmy-project/.claude/settings.local.json\nmy-project/CLAUDE.local.md\n非共有・gitignore"]
     CC["Claude Code"]
 
     U -->|上書き| P -->|上書き| L --> CC
@@ -84,7 +84,7 @@ graph LR
 
 ```mermaid
 graph LR
-    T["このテンプレート\n（clone）"] --> P["<project>/.claude/\nCLAUDE.md"]
+    T["このテンプレート\n（clone）"] --> P["my-project/.claude/\nmy-project/CLAUDE.md"]
     P --> CC["Claude Code"]
 ```
 
@@ -199,17 +199,17 @@ ln -sf ~/my-claude-settings/home/CLAUDE.md ~/CLAUDE.md
 
 ```mermaid
 graph TD
-    T["zabaot/claude-project-template"] -->|"gh repo create --template"| R["チームリポジトリ"]
+    T["このテンプレートリポジトリ"] -->|"gh repo create --template"| R["my-project/\n（チームリポジトリ・クローン先）"]
 
-    subgraph team["チームリポジトリ（git 管理）"]
-        CM["<project>/CLAUDE.md\nチーム共通指示・コーディング規約"]
-        ST["<project>/.claude/settings.json\n権限・モデル"]
-        SK["<project>/.claude/skills/\nチーム共有スキル"]
+    subgraph team["git 管理ファイル（チーム共有）"]
+        CM["my-project/CLAUDE.md\nチーム共通指示・コーディング規約"]
+        ST["my-project/.claude/settings.json\n権限・モデル"]
+        SK["my-project/.claude/skills/\nチーム共有スキル"]
     end
 
-    subgraph personal["各メンバーのローカル（git 管理外）"]
-        SL["<project>/.claude/settings.local.json\n個人権限の上書き"]
-        CL["<project>/CLAUDE.local.md\n個人メモ・好み"]
+    subgraph personal["各メンバーのローカル（git 管理外・gitignore）"]
+        SL["my-project/.claude/settings.local.json\n個人権限の上書き"]
+        CL["my-project/CLAUDE.local.md\n個人メモ・好み"]
         US["~/.claude/\n全プロジェクト共通の個人設定（ホームDir）"]
     end
 
@@ -284,7 +284,7 @@ graph TD
 
     CD -->|"専用(Ubuntu)"| DU["~/.config/claude/\nclaude_desktop_config.json"]
     CD -->|"専用(macOS)"| DF["~/Library/Application Support/Claude/\nclaude_desktop_config.json"]
-    CC -->|"専用"| CF["~/.claude/settings.json  ← ユーザー設定（ホーム）\n~/CLAUDE.md              ← ユーザー共通指示\n<project>/.claude/       ← プロジェクト設定\n<project>/.mcp.json      ← プロジェクト MCP"]
+    CC -->|"専用"| CF["~/.claude/settings.json    ← ユーザー設定（ホーム）\n~/CLAUDE.md                ← ユーザー共通指示\nmy-project/.claude/        ← プロジェクト設定\nmy-project/.mcp.json       ← プロジェクト MCP"]
     CW -->|"専用"| BF["ブラウザの localStorage\n（ローカルファイルなし）"]
 ```
 
@@ -319,7 +319,7 @@ graph LR
     end
 
     subgraph code["Claude Code"]
-        PC["<project>/.mcp.json\nに記載（プロジェクト共有・git管理）"]
+        PC["my-project/.mcp.json\nに記載（プロジェクト共有・git管理）"]
         UC["~/.claude/settings.json\nに記載（個人・全プロジェクト共通）"]
     end
 
